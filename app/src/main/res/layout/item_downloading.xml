@@ -43,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_novel_name"
         app:layout_constraintEnd_toStartOf="@id/btn_pause"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:max="100"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
     <LinearLayout
