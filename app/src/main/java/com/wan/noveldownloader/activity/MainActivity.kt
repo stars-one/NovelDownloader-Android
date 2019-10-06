@@ -45,6 +45,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     val item = tool.downloadChacter(this@MainActivity,i)
                     publishProgress(item)
                 }
+                tool.mergeFile(this@MainActivity)
             }
             return true
         }
@@ -58,6 +59,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             } else {
                 updateItem(values.last())
             }
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+            showToast("下载成功")
         }
 
     }
