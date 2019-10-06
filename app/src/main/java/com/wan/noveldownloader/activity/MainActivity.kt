@@ -83,7 +83,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
      * 开始下载小说
      */
     fun startTask(url: String) {
-        if (url.contentEquals("www.x23qb.com")) {
+        if (url.contains("www.x23qb.com")) {
             showToast("解析网址中，请稍候...")
             DownloadingTask().executeOnExecutor(exec, url)
         } else {
