@@ -55,4 +55,5 @@ dependencies {
     implementation 'com.koushikdutta.ion:ion:2.+'
     implementation 'com.code19.library:library:0.1.4'
     implementation 'com.yanzhenjie.permission:support:2.0.1'
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
 }

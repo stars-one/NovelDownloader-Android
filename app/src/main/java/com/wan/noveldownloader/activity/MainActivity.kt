@@ -32,9 +32,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private var adapter: RVAdapter<DownloadingItem>? = null
     private val dataList = arrayListOf<DownloadingItem>()
 
-    internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, Boolean>() {
+    internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, Int>() {
         var isFirst = true
-        override fun doInBackground(vararg params: String?): Boolean {
+        override fun doInBackground(vararg params: String?): Int {
             val tool = NovelDownloadTool(params[0].toString(), adapter!!.list_bean.size)
             val messageItem = tool.getMessage()
             publishProgress(messageItem)
@@ -43,9 +43,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 val item = tool.downloadChacter(this@MainActivity, i)
                 publishProgress(item)
             }
-            tool.mergeFile(this@MainActivity)
-
-            return true
+            return tool.mergeFile(this@MainActivity)
         }
 
         override fun onProgressUpdate(vararg values: DownloadingItem?) {
@@ -59,8 +57,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
         }
 
-        override fun onPostExecute(result: Boolean?) {
+        override fun onPostExecute(result: Int?) {
             showToast("下载成功")
+            //移出adapter中的数据
+            result?.let { adapter!!.remove(it) }
         }
 
     }
@@ -83,8 +83,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
      * 开始下载小说
      */
     fun startTask(url: String) {
-        showToast("解析网址中，请稍候...")
-        DownloadingTask().executeOnExecutor(exec, url)
+        if (url.contentEquals("www.x23qb.com")) {
+            showToast("解析网址中，请稍候...")
+            DownloadingTask().executeOnExecutor(exec, url)
+        } else {
+            showToast("不支持该书源哦！")
+        }
 
     }
 

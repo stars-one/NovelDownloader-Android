@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_menu.*
 class MenuActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
-            con_about -> showToast("关于界面")
+            con_about -> startActivity(AboutActivity::class.java)
             con_donate -> {
                 AlertDialog.Builder(this).setTitle("打赏").setMessage("若是觉得软件对你有所帮助，不妨打赏支持我一波！你的打赏，就是我的更新的动力")
                         .setPositiveButton("支付宝", { dialog, which ->

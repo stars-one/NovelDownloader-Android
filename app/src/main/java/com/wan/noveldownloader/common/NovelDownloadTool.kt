@@ -80,7 +80,7 @@ class NovelDownloadTool(var url: String,var itemPosition: Int) {
     /**
      * 合并文件
      */
-    fun mergeFile(context: Context) {
+    fun mergeFile(context: Context) :Int{
         val dir = File(SDUtil.getStoragePath(context, false), "星之小说下载器").path
         val file = File(dir, "${name.trim()}.txt")
         var bf = StringBuffer("")
@@ -96,5 +96,6 @@ class NovelDownloadTool(var url: String,var itemPosition: Int) {
         }
         //写入
         file.writeText(bf.toString(), charset("gbk"))
+        return itemPosition
     }
 }
