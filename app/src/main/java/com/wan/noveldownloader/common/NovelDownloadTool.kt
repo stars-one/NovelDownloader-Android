@@ -14,12 +14,13 @@ import java.text.DecimalFormat
  * @description
  *
  */
-class NovelDownloadTool(var url: String) {
+class NovelDownloadTool(var url: String,var itemPosition: Int) {
 
     var chacterMap = hashMapOf<Int, String>()
     private var name = ""
     private var imgUrl = ""
     private var tempFileHead = ""
+
     fun getMessage(): DownloadingItem {
         val document = Jsoup.connect(url).get()
         val div = document.getElementById("bookimg")
@@ -38,7 +39,7 @@ class NovelDownloadTool(var url: String) {
         val start = url.indexOf("k") + 2
         tempFileHead = url.substring(start, end) + "_"
 
-        return DownloadingItem(name, imgUrl, 0.0, "0.00%", "0/${chacterMap.size}", "解析信息中")
+        return DownloadingItem(name, imgUrl, 0.0, "0.00%", "0/${chacterMap.size}", "解析信息中",itemPosition)
     }
 
     fun downloadChacter(context: Context, index: Int): DownloadingItem {
@@ -71,9 +72,9 @@ class NovelDownloadTool(var url: String) {
         val df = DecimalFormat("0.00")
         val progressText = "${df.format(temp * 100)}%"
         if (temp == 1.0) {
-            return DownloadingItem(name, imgUrl, temp * 100, progressText, "${index + 1}/${chacterMap.size}", "合并中")
+            return DownloadingItem(name, imgUrl, temp * 100, progressText, "${index + 1}/${chacterMap.size}", "合并中",itemPosition)
         }
-        return DownloadingItem(name, imgUrl, temp * 100, progressText, "${index + 1}/${chacterMap.size}", "下载中")
+        return DownloadingItem(name, imgUrl, temp * 100, progressText, "${index + 1}/${chacterMap.size}", "下载中",itemPosition)
     }
 
     /**

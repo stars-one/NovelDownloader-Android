@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 
 class MainActivity : BaseActivity(), View.OnClickListener {
@@ -36,17 +35,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, Boolean>() {
         var isFirst = true
         override fun doInBackground(vararg params: String?): Boolean {
-            thread {
-                val tool = NovelDownloadTool(params[0].toString())
-                val messageItem = tool.getMessage()
-                publishProgress(messageItem)
-                for (i in 0 until tool.chacterMap.size) {
-                    //下载每章节，并更新
-                    val item = tool.downloadChacter(this@MainActivity,i)
-                    publishProgress(item)
-                }
-                tool.mergeFile(this@MainActivity)
+            val tool = NovelDownloadTool(params[0].toString(), adapter!!.list_bean.size)
+            val messageItem = tool.getMessage()
+            publishProgress(messageItem)
+            for (i in 0 until tool.chacterMap.size) {
+                //下载每章节，并更新
+                val item = tool.downloadChacter(this@MainActivity, i)
+                publishProgress(item)
             }
+            tool.mergeFile(this@MainActivity)
+
             return true
         }
 
@@ -122,7 +120,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun updateItem(downloadingItem: DownloadingItem?) {
-        val viewholder = rv_downloading.findViewHolderForAdapterPosition(0)
+        val viewholder = rv_downloading.findViewHolderForAdapterPosition(downloadingItem!!.itemPosition)
         val itemView = viewholder.itemView
         //进度条刷新进度
         val pb = itemView.findViewById(R.id.pb_downloading)

@@ -13,9 +13,9 @@ package com.wan.noveldownloader.model
  * @param progressText：进度 25.65% String
  * @param progressDetail： 具体进度  20/52 String
  */
-data class DownloadingItem(var novelName: String,var imgUrl: String,var progress: Double,var progressText: String,var progressDetail: String,var flag: String)
+data class DownloadingItem(var novelName: String, var imgUrl: String, var progress: Double, var progressText: String, var progressDetail: String, var flag: String, var itemPosition: Int)
 
 /**
  * fileSize:文件大小
  */
-data class DownloadedItem(var novelName: String,var imgUrl: String,var fileSize: String)
+data class DownloadedItem(var novelName: String, var imgUrl: String, var fileSize: String)
