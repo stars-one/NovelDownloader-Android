@@ -10,6 +10,7 @@ import android.support.v7.widget.SimpleItemAnimator
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.cy.cyrvadapter.adapter.RVAdapter
@@ -99,6 +100,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        //存储权限申请
         AndPermission.with(this)
                 .runtime()
                 .permission(Permission.Group.STORAGE)
@@ -128,16 +130,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         val itemView = viewholder.itemView
         //进度条刷新进度
         val pb = itemView.findViewById(R.id.pb_downloading)
-        if (pb is ProgressBar) pb.progress = downloadingItem!!.progress.toInt()
+        if (pb is ProgressBar) pb.progress = downloadingItem.progress.toInt()
         //百分比进度
         val pbText = itemView.findViewById(R.id.tv_progress)
-        if (pbText is TextView) pbText.text = downloadingItem!!.progressText
+        if (pbText is TextView) pbText.text = downloadingItem.progressText
         //具体进度
         val tvDetail = itemView.findViewById(R.id.tv_progress_detail)
-        if (tvDetail is TextView) tvDetail.text = downloadingItem!!.progressDetail
+        if (tvDetail is TextView) tvDetail.text = downloadingItem.progressDetail
         //状态
         val tvFlag = itemView.findViewById(R.id.tv_flag)
-        if (tvFlag is TextView) tvFlag.text = downloadingItem!!.flag
+        if (tvFlag is TextView) tvFlag.text = downloadingItem.flag
 
     }
 
@@ -155,6 +157,29 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 holder?.setText(R.id.tv_progress_detail, bean?.progressDetail)
                 holder?.setImage(this@MainActivity.applicationContext, R.id.iv_novel, bean?.imgUrl)
                 holder?.setProgress(R.id.pb_downloading, bean!!.progress.toInt())
+
+
+                holder?.setOnClickListener(R.id.btn_pause, {
+                    val tvStatus = holder.getView<TextView>(R.id.tv_status)
+                    val btnPause = holder.getView<Button>(R.id.btn_pause)
+                    //暂停按钮点击会切换图标
+                    if (tvStatus.text.toString() == "1") {
+                        //不同android版本获取drawble的方法不一样
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            btnPause.background = resources.getDrawable(R.drawable.icon_start, null)
+                        } else {
+                            btnPause.background = resources.getDrawable(R.drawable.icon_start)
+                        }
+                        tvStatus.text = "0"
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            btnPause.background = resources.getDrawable(R.drawable.icon_pause, null)
+                        } else {
+                            btnPause.background = resources.getDrawable(R.drawable.icon_pause)
+                        }
+                        tvStatus.text = "1"
+                    }
+                })
             }
 
             override fun getItemLayoutID(position: Int, bean: DownloadingItem?): Int {
