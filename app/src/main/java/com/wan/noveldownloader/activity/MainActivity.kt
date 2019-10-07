@@ -35,14 +35,27 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, Int>() {
         var isFirst = true
+        var itemPosition = 0
+        var tvStatus: TextView? = null
+        override fun onPreExecute() {
+            //一些初始化操作
+            itemPosition = adapter!!.list_bean.size
+
+        }
+
         override fun doInBackground(vararg params: String?): Int {
-            val tool = NovelDownloadTool(params[0].toString(), adapter!!.list_bean.size)
+
+            val tool = NovelDownloadTool(params[0].toString(), itemPosition)
             val messageItem = tool.getMessage()
             publishProgress(messageItem)
             for (i in 0 until tool.chacterMap.size) {
                 //下载每章节，并更新
                 val item = tool.downloadChacter(this@MainActivity, i)
                 publishProgress(item)
+
+                //tvStatus控件可能为空（因为RecyclerView的itemView未初始化成功)
+                while (tvStatus?.text.toString() != "1"){}
+                // if (tvStatus != null) while (tvStatus!!.text.toString() != "1"){}
             }
             return tool.mergeFile(this@MainActivity)
         }
@@ -53,8 +66,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 values[0]?.let { dataList.add(it) }
                 adapter?.notifyDataSetChanged()
                 isFirst = false
+
             } else {
                 updateItem(values.last())
+                if (tvStatus == null) {
+                    tvStatus = rv_downloading.findViewHolderForAdapterPosition(itemPosition).itemView.findViewById(R.id.tv_status) as TextView?
+                }
             }
         }
 
@@ -125,6 +142,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
     }
 
+    /**
+     * 更新进度等信息
+     */
     fun updateItem(downloadingItem: DownloadingItem?) {
         val viewholder = rv_downloading.findViewHolderForAdapterPosition(downloadingItem!!.itemPosition)
         val itemView = viewholder.itemView
