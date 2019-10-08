@@ -1,5 +1,10 @@
 package com.wan.noveldownloader.model
 
+import android.os.Parcel
+import android.os.Parcelable
+import org.litepal.crud.LitePalSupport
+
+
 /**
  *
  * @author StarsOne
@@ -18,4 +23,30 @@ data class DownloadingItem(var novelName: String, var imgUrl: String, var progre
 /**
  * fileSize:文件大小
  */
-data class DownloadedItem(var novelName: String, var imgUrl: String, var fileSize: String)
+data class DownloadedItem(var novelName: String, var imgUrl: String, var fileSize: String): LitePalSupport(),Parcelable {
+    constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString()) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(novelName)
+        parcel.writeString(imgUrl)
+        parcel.writeString(fileSize)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<DownloadedItem> {
+        override fun createFromParcel(parcel: Parcel): DownloadedItem {
+            return DownloadedItem(parcel)
+        }
+
+        override fun newArray(size: Int): Array<DownloadedItem?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
