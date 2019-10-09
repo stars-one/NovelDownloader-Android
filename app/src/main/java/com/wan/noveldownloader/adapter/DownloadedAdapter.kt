@@ -21,6 +21,7 @@ class DownloadedAdapter(list_bean: MutableList<DownloadedItem>?) : RVAdapter<Dow
     override fun bindDataToView(holder: RVViewHolder?, position: Int, bean: DownloadedItem?, isSelected: Boolean) {
         holder?.setText(R.id.tv_novel_name,bean?.novelName)
         holder?.setText(R.id.tv_file_size,bean?.fileSize)
+        holder?.setText(R.id.tv_file_path,bean?.filePath)
         holder?.setImage(holder.itemView.context, R.id.iv_novel,bean?.imgUrl)
     }
 

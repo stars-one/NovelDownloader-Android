@@ -97,7 +97,8 @@ class NovelDownloadTool(var url: String,var itemPosition: Int) {
         }
         //写入
         file.writeText(bf.toString(), charset("gbk"))
-        val fileSize = file.length()/(1024*1024)
-        return DownloadedItem(name,imgUrl,"文件大小：{$fileSize}MB",itemPosition)
+        val fileSize = file.length()/(1024*1024*1.0)
+        val df = DecimalFormat("0.00")
+        return DownloadedItem(name,imgUrl,"大小：${df.format(fileSize)}MB","路径：${file.parent}",itemPosition)
     }
 }

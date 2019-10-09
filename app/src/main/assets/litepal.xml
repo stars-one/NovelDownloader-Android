@@ -10,7 +10,7 @@
     -->
     <dbname value="history" />
 
-    <version value="2" />
+    <version value="3" />
 
     <!--
     	Define your models in the list with mapping tag, LitePal will
