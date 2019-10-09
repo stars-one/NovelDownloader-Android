@@ -16,7 +16,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.cy.cyrvadapter.adapter.RVAdapter
 import com.wan.noveldownloader.R
+import com.wan.noveldownloader.activity.MainActivity
 import com.wan.noveldownloader.common.NovelDownloadTool
+import com.wan.noveldownloader.model.DownloadedItem
 import com.wan.noveldownloader.model.DownloadingItem
 import kotlinx.android.synthetic.main.fragment_downloading.*
 import java.util.concurrent.LinkedBlockingQueue
@@ -32,7 +34,7 @@ class DownloadingFragment : Fragment() {
     private var adapter: RVAdapter<DownloadingItem>? = null
     private val dataList = arrayListOf<DownloadingItem>()
 
-    internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, Int>() {
+    internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, DownloadedItem>() {
         var isFirst = true
         var itemPosition = 0
         var tvStatus: TextView? = null
@@ -42,7 +44,7 @@ class DownloadingFragment : Fragment() {
 
         }
 
-        override fun doInBackground(vararg params: String?): Int {
+        override fun doInBackground(vararg params: String?): DownloadedItem {
 
             val tool = NovelDownloadTool(params[0].toString(), itemPosition)
             val messageItem = tool.getMessage()
@@ -75,10 +77,12 @@ class DownloadingFragment : Fragment() {
             }
         }
 
-        override fun onPostExecute(result: Int?) {
+        override fun onPostExecute(result: DownloadedItem?) {
             showToast("下载成功")
             //移出adapter中的数据
-            result?.let { adapter!!.remove(it) }
+            adapter?.remove(result!!.itemPosition)
+            val mainactivity = this@DownloadingFragment.activity as MainActivity
+            mainactivity.addItemToHistory(result)
         }
 
     }

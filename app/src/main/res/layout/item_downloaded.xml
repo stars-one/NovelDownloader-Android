@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+    <ImageView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/iv_novel"
+        android:background="@color/colorPrimary"
+        android:layout_width="60dp"
+        android:layout_height="80dp"/>
+    <TextView
+        app:layout_constraintStart_toEndOf="@id/iv_novel"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/tv_novel_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="不正经的魔术导师"/>
+    <TextView
+
+        app:layout_constraintTop_toBottomOf="@id/tv_novel_name"
+        app:layout_constraintStart_toEndOf="@id/iv_novel"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/tv_file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="文件大小：2.84MB"/>
 
 </android.support.constraint.ConstraintLayout>

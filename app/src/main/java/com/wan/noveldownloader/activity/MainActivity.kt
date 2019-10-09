@@ -11,6 +11,7 @@ import com.wan.noveldownloader.adapter.FragmentAdapter
 import com.wan.noveldownloader.common.BarUtil
 import com.wan.noveldownloader.fragment.DownloadedFragment
 import com.wan.noveldownloader.fragment.DownloadingFragment
+import com.wan.noveldownloader.model.DownloadedItem
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,7 +20,7 @@ import org.litepal.LitePal
 
 class MainActivity : BaseActivity(), View.OnClickListener {
 
-
+    private val downloadedFragment = DownloadedFragment()
     override fun onClick(v: View?) {
         /*when (v) {
 
@@ -61,11 +62,14 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
 
+    fun addItemToHistory(downloadedItem: DownloadedItem?) {
+        downloadedItem?.let { downloadedFragment.addItem(it) }
+    }
 
     override fun initView() {
-        val fragments = arrayListOf(DownloadingFragment(), DownloadedFragment())
+        val fragments = arrayListOf(DownloadingFragment(), downloadedFragment)
         val fm = supportFragmentManager
-        viewpager.adapter = FragmentAdapter(fm,fragments)
+        viewpager.adapter = FragmentAdapter(fm, fragments)
         tablayout.setupWithViewPager(viewpager)
 
     }

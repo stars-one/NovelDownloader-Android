@@ -1,6 +1,7 @@
 package com.wan.noveldownloader.common
 
 import android.content.Context
+import com.wan.noveldownloader.model.DownloadedItem
 import com.wan.noveldownloader.model.DownloadingItem
 import org.jsoup.Jsoup
 import java.io.File
@@ -80,7 +81,7 @@ class NovelDownloadTool(var url: String,var itemPosition: Int) {
     /**
      * 合并文件
      */
-    fun mergeFile(context: Context) :Int{
+    fun mergeFile(context: Context) :DownloadedItem{
         val dir = File(SDUtil.getStoragePath(context, false), "星之小说下载器").path
         val file = File(dir, "${name.trim()}.txt")
         var bf = StringBuffer("")
@@ -96,6 +97,7 @@ class NovelDownloadTool(var url: String,var itemPosition: Int) {
         }
         //写入
         file.writeText(bf.toString(), charset("gbk"))
-        return itemPosition
+        val fileSize = file.length()/(1024*1024)
+        return DownloadedItem(name,imgUrl,"文件大小：{$fileSize}MB",itemPosition)
     }
 }
