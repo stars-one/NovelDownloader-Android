@@ -80,7 +80,8 @@ class DownloadingFragment : Fragment() {
         override fun onPostExecute(result: DownloadedItem?) {
             showToast("下载成功")
             //移出adapter中的数据
-            adapter?.remove(result!!.itemPosition)
+            adapter?.notifyItemRemoved(result!!.itemPosition)
+            dataList.removeAt(itemPosition)
             val mainactivity = this@DownloadingFragment.activity as MainActivity
             mainactivity.addItemToHistory(result)
         }
@@ -158,6 +159,7 @@ class DownloadingFragment : Fragment() {
      * 更新进度等信息
      */
     fun updateItem(downloadingItem: DownloadingItem?) {
+        //todo 多任务下载bug待修复
         val viewholder = rv_downloading.findViewHolderForAdapterPosition(downloadingItem!!.itemPosition)
         val itemView = viewholder.itemView
         //进度条刷新进度
@@ -193,7 +195,6 @@ class DownloadingFragment : Fragment() {
     fun showToast(text: String) {
         Toast.makeText(this.activity, text, Toast.LENGTH_SHORT).show()
     }
-
 
 
 }
