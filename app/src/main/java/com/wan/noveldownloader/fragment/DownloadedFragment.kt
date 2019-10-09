@@ -2,9 +2,11 @@ package com.wan.noveldownloader.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.cy.cyrvadapter.adapter.RVAdapter
 import com.wan.noveldownloader.R
 import com.wan.noveldownloader.adapter.DownloadedAdapter
@@ -50,7 +52,19 @@ class DownloadedFragment : Fragment() {
     }
 
     private fun delete() {
-        list = arrayListOf()
-        adapter?.notifyDataSetChanged()
+        AlertDialog.Builder(this.activity)
+                .setTitle("删除")
+                .setMessage("确定要清空下载记录？")
+                .setNegativeButton("取消", { dialog, _ -> dialog.dismiss() })
+                .setPositiveButton("确定", { dialog, which -> run{
+                    list?.clear()
+                    adapter?.notifyDataSetChanged()
+                    //数据库中清空
+                    val data = LitePal.findAll(DownloadedItem::class.java)
+                    for (item in data) {
+                        item.delete()
+                    }
+                    Toast.makeText(this.activity,"记录已删除",Toast.LENGTH_SHORT)
+                } }).create().show()
     }
 }
