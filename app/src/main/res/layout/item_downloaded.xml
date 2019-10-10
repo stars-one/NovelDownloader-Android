@@ -34,6 +34,15 @@
         android:layout_height="wrap_content"
         android:text="文件大小：2.84MB"/>
     <TextView
+        app:layout_constraintTop_toBottomOf="@id/tv_novel_name"
+        app:layout_constraintStart_toEndOf="@id/tv_novel_name"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2019/2/05 12:20"/>
+    <TextView
         app:layout_constraintTop_toBottomOf="@id/tv_file_size"
         app:layout_constraintStart_toEndOf="@id/iv_novel"
         android:layout_marginTop="10dp"

@@ -22,4 +22,4 @@ data class DownloadingItem(var novelName: String, var imgUrl: String, var progre
  * fileSize:文件大小
  * itemPosition: 在rv_downloading中列表的顺序，便于下载任务完成移除item
  */
-data class DownloadedItem(var novelName: String, var imgUrl: String, var fileSize: String,var filePath: String, var itemPosition: Int) : LitePalSupport()
+data class DownloadedItem(var novelName: String, var imgUrl: String, var fileSize: String,var filePath: String, var itemPosition: Int,var date: String) : LitePalSupport()

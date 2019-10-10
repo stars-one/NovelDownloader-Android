@@ -22,6 +22,7 @@ class DownloadedAdapter(list_bean: MutableList<DownloadedItem>?) : RVAdapter<Dow
         holder?.setText(R.id.tv_novel_name,bean?.novelName)
         holder?.setText(R.id.tv_file_size,bean?.fileSize)
         holder?.setText(R.id.tv_file_path,bean?.filePath)
+        holder?.setText(R.id.tv_date,bean?.date)
         holder?.setImage(holder.itemView.context, R.id.iv_novel,bean?.imgUrl)
     }
 

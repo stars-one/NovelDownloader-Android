@@ -6,6 +6,8 @@ import com.wan.noveldownloader.model.DownloadingItem
 import org.jsoup.Jsoup
 import java.io.File
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -97,8 +99,9 @@ class NovelDownloadTool(var url: String,var itemPosition: Int) {
         }
         //写入
         file.writeText(bf.toString(), charset("gbk"))
+        val date = SimpleDateFormat("yyyy/MM/dd hh:mm").format(Date(file.lastModified()))
         val fileSize = file.length()/(1024*1024*1.0)
         val df = DecimalFormat("0.00")
-        return DownloadedItem(name,imgUrl,"大小：${df.format(fileSize)}MB","路径：${file.parent}",itemPosition)
+        return DownloadedItem(name,imgUrl,"大小：${df.format(fileSize)}MB","路径：${file.parent}",itemPosition,date)
     }
 }

@@ -59,7 +59,7 @@ class DownloadedFragment : Fragment() {
                 .setPositiveButton("确定", { dialog, which -> run{
                     list?.clear()
                     adapter?.notifyDataSetChanged()
-                    //数据库中清空
+                    //数据库中清空数据
                     val data = LitePal.findAll(DownloadedItem::class.java)
                     for (item in data) {
                         item.delete()

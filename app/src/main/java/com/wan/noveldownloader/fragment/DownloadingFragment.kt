@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.SimpleItemAnimator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,9 @@ class DownloadingFragment : Fragment() {
 
     private var adapter: RVAdapter<DownloadingItem>? = null
     private val dataList = arrayListOf<DownloadingItem>()
+    private val itemViewMap = hashMapOf<Int?, View>()
+    //itemPostion(data) - > position(recyclerview)
+    private val itemPositonMap = hashMapOf<Int, Int>()
 
     internal inner class DownloadingTask : AsyncTask<String, DownloadingItem, DownloadedItem>() {
         var isFirst = true
@@ -40,11 +44,13 @@ class DownloadingFragment : Fragment() {
         var tvStatus: TextView? = null
         override fun onPreExecute() {
             //一些初始化操作
-            itemPosition = adapter!!.list_bean.size
-
+            itemPosition = itemPositonMap.size
+            //保存对应的item索引和位置
+            itemPositonMap[itemPosition] = dataList.size
         }
 
         override fun doInBackground(vararg params: String?): DownloadedItem {
+
 
             val tool = NovelDownloadTool(params[0].toString(), itemPosition)
             val messageItem = tool.getMessage()
@@ -66,22 +72,35 @@ class DownloadingFragment : Fragment() {
             //recyclerView Item更新
             if (isFirst) {
                 values[0]?.let { dataList.add(it) }
+
                 adapter?.notifyDataSetChanged()
                 isFirst = false
 
             } else {
-                updateItem(values.last())
                 if (tvStatus == null) {
-                    tvStatus = rv_downloading.findViewHolderForAdapterPosition(itemPosition).itemView.findViewById(R.id.tv_status) as TextView?
+                    val itemView = rv_downloading.findViewHolderForAdapterPosition(itemPositonMap[itemPosition] as Int).itemView
+                    tvStatus = itemView.findViewById(R.id.tv_status) as TextView?
+                    //存入itemView
+                    itemViewMap[values.last()?.itemPosition] = itemView
                 }
+                updateItem(values.last())
             }
         }
 
         override fun onPostExecute(result: DownloadedItem?) {
             showToast("下载成功")
+
             //移出adapter中的数据
-            adapter?.notifyItemRemoved(result!!.itemPosition)
-            dataList.removeAt(itemPosition)
+            val position = itemPositonMap[result?.itemPosition] as Int
+
+            adapter?.notifyItemRemoved(position)
+            dataList.removeAt(position)
+            Log.e("--test--",dataList.toString())
+            Log.e("--test--",itemPositonMap.toString())
+            for (i in position + 1 until itemPositonMap.size) {
+                itemPositonMap[i] = itemPositonMap[i] as Int - 1
+            }
+
             val mainactivity = this@DownloadingFragment.activity as MainActivity
             mainactivity.addItemToHistory(result)
         }
@@ -105,8 +124,8 @@ class DownloadingFragment : Fragment() {
             val editText = TextInputEditText(this.activity)
             AlertDialog.Builder(this.activity).setTitle("输入小说网址")
                     .setView(editText)
-                    .setPositiveButton("确定", { dialog, which -> startTask(editText.text.toString()) })
-                    .setNegativeButton("取消", { dialog, which -> dialog.cancel() })
+                    .setPositiveButton("确定", { _, _ -> startTask(editText.text.toString()) })
+                    .setNegativeButton("取消", { dialog, _ -> dialog.cancel() })
                     .create().show()
 
         })
@@ -160,20 +179,21 @@ class DownloadingFragment : Fragment() {
      */
     fun updateItem(downloadingItem: DownloadingItem?) {
         //todo 多任务下载bug待修复
-        val viewholder = rv_downloading.findViewHolderForAdapterPosition(downloadingItem!!.itemPosition)
-        val itemView = viewholder.itemView
-        //进度条刷新进度
-        val pb = itemView.findViewById(R.id.pb_downloading)
-        if (pb is ProgressBar) pb.progress = downloadingItem.progress.toInt()
-        //百分比进度
-        val pbText = itemView.findViewById(R.id.tv_progress)
-        if (pbText is TextView) pbText.text = downloadingItem.progressText
-        //具体进度
-        val tvDetail = itemView.findViewById(R.id.tv_progress_detail)
-        if (tvDetail is TextView) tvDetail.text = downloadingItem.progressDetail
-        //状态
-        val tvFlag = itemView.findViewById(R.id.tv_flag)
-        if (tvFlag is TextView) tvFlag.text = downloadingItem.flag
+        if (downloadingItem != null) {
+            val itemView = itemViewMap[downloadingItem.itemPosition]
+            //进度条刷新进度
+            val pb = itemView?.findViewById(R.id.pb_downloading)
+            if (pb is ProgressBar) pb.progress = downloadingItem.progress.toInt()
+            //百分比进度
+            val pbText = itemView?.findViewById(R.id.tv_progress)
+            if (pbText is TextView) pbText.text = downloadingItem.progressText
+            //具体进度
+            val tvDetail = itemView?.findViewById(R.id.tv_progress_detail)
+            if (tvDetail is TextView) tvDetail.text = downloadingItem.progressDetail
+            //状态
+            val tvFlag = itemView?.findViewById(R.id.tv_flag)
+            if (tvFlag is TextView) tvFlag.text = downloadingItem.flag
+        }
 
     }
 
